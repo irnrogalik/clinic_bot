@@ -1,0 +1,29 @@
+{
+  "name": "my_clinic_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.ts",
+  "scripts": {
+    "local": "sls invoke local",
+    "deploy": "sls deploy",
+    "logs": "sls logs --function processWebhook -t"
+  },
+  "eslintConfig": {
+    "extends": "@serverless/eslint-config/node",
+    "root": true
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1378.0",
+    "node-telegram-bot-api": "^0.61.0"
+  },
+  "devDependencies": {
+    "@serverless/eslint-config": "^5.0.1",
+    "@types/aws-lambda": "^8.10.119",
+    "@types/node": "^10.12.18",
+    "serverless-plugin-typescript": "^2.1.5",
+    "ts-loader": "^5.4.5",
+    "typescript": "^5.1.6"
+  }
+}

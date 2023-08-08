@@ -1,0 +1,18 @@
+service: my-clinic
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-plugin-typescript
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+functions:
+  bot:
+    handler: handler.bot
+    events:
+    - httpApi:
+         path: /
+         method: get
