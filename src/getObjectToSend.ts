@@ -8,7 +8,6 @@ export async function getObjectToSend(chatId: number, dataMessage: Message, isCa
     inlineKeyboard: []
   };
   const command: string = dataMessage.text || '';
-
   if (isCallback) {
     const callbackData = dataMessage.data.split('_');
     switch (callbackData[0]) {

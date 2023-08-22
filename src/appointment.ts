@@ -17,7 +17,6 @@ export class Appointment {
   
   async make(): Promise<ObjectToSend> {
     try {
-      this.message = 'Choose a doctor';
       const params: QueryParams = {
         TableName: 'Doctor',
         FilterExpression: 'currentState = :currentState',
@@ -33,8 +32,11 @@ export class Appointment {
             { text: doctor.name, callback_data: `make_doctor_${doctor.id}` }
           );
         }
+        this.message = 'Choose a doctor';
+        this.inlineKeyboard = getInlineKeyboard(buttons);
+      } else {
+        this.message = 'Something wrong. Try again';
       }
-      this.inlineKeyboard = getInlineKeyboard(buttons);
     } catch (err) {
       console.log(err, 'errors')
     }
@@ -172,16 +174,18 @@ export class Appointment {
         };
         const freeTimeSlots = await this.db.getAll(params);
         const buttons: Button[] = [];
-        if (freeTimeSlots.Items && freeTimeSlots.Items.length){
+        if (freeTimeSlots.Items && freeTimeSlots.Items.length) {
           for (const freeSlot of freeTimeSlots.Items) {
             const date = new Date(freeSlot.timestamp);
             buttons.push(
               { text: date.toLocaleString(), callback_data: `make_time_${freeSlot.id}`}
             );
           }
+          this.message = 'Choose a time';
+          this.inlineKeyboard = getInlineKeyboard(buttons);
+        } else {
+          this.message = 'The chosen doctor has no free slots';
         }
-        this.message = 'Choose a time';
-        this.inlineKeyboard = getInlineKeyboard(buttons);
       } else if (callbackData[1] === 'time') {
         const paramFreeTime: QueryGetParams = {
           TableName : 'FreeTimeSlot',
