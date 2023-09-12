@@ -1,12 +1,13 @@
 import * as telegramApi from 'node-telegram-bot-api';
 import { Chat, Message } from './src/interfaces';
 import { getObjectToSend } from './src/getObjectToSend';
-
-const token = process.env.BOT_TOKEN;
-const botT = new telegramApi(token);
+import * as AWS from 'aws-sdk';
 
 export async function bot(event) {
-  if (token) {
+  const ssm = new AWS.SSM();
+  try {
+    const token = (await ssm.getParameter({ Name: 'BOT_TOKEN' }).promise()).Parameter?.Value;
+    const botT = new telegramApi(token);
     const body = JSON.parse(event.body);
     console.log(event, 'event');
 
@@ -28,7 +29,8 @@ export async function bot(event) {
     } else {
       await botT.sendMessage(chatId, message);
     }
-  } else {
-    console.log('Set the BOT_TOKEN environment variable to the lambda');
+  } catch(err) {
+    console.log(err, 'err');
+    console.log('Set the BOT_TOKEN environment variable in the Parameter Store');
   }
 };
